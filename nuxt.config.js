@@ -47,7 +47,7 @@ export default {
   },
 
   // Global Server Middleware: https://nuxtjs.org/docs/2.x/concepts/server-side-rendering
-  serverMiddleware: ['~/server-middleware/logger'],
+  serverMiddleware: ['~/server-middleware/logger.ts'],
 
   // Global Environment: https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-env
   env: {
