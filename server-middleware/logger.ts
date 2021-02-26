@@ -1,4 +1,8 @@
-export default function (req: any, res: any, next: Function) {
+import { ServerMiddleware } from '@nuxt/types'
+
+const myLooger: ServerMiddleware = (req: any, res: any, next: Function) => {
   console.log(req.url)
   next()
 }
+
+export default myLooger

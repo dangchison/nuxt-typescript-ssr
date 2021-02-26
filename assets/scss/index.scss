@@ -2,3 +2,20 @@ body {
   font-size: 14px;
   line-height: 1;
 }
+
+.fill-height {
+  height: 100vh;
+}
+
+.t-toast.toasted-container {
+
+  &.top-right {
+    top: 1%;
+    right: 1%;
+
+    @media only screen and (max-width: 600px) {
+      top: 0;
+      right: 0;
+    }
+  }
+}

@@ -1,83 +1,78 @@
 <template>
-  <v-card>
-    <v-img :src="productImage" width="300" height="300"></v-img>
-    <v-card-text>{{ product[0].nftAsset.name }}</v-card-text>
+  <v-card width="300">
+    <v-img :src="$ipfsRender(product.image)" height="300"></v-img>
+    <v-card-text>{{ product.name }}</v-card-text>
   </v-card>
 </template>
 
-<script>
-export default {
-  name: 'Id',
-  async asyncData({ params }) {
-    const product = await fetch('https://teemo-ai-service.herokuapp.com/ownerships/list', {
-      method: 'POST',
-      body: JSON.stringify([params.id]),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then((res) => res.json())
-    return { product }
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator'
+import { getOwnerShipDetails } from '~/shared/services/ownership.service'
+
+@Component({
+  asyncData({ $axios, $toast, params: { id }, redirect }) {
+    return getOwnerShipDetails($axios, [id])
+      .then((result: any) => {
+        return { product: result[0] }
+      })
+      .catch((err: any) => {
+        $toast.error(err.error)
+        redirect({ name: 'index' })
+      })
   },
-  data() {
-    return {
-      product: [],
-    }
-  },
-  head() {
+  head(this: ProductDetailsComponent) {
     return {
       meta: [
         {
           hid: 'twitter:title',
           name: 'twitter:title',
-          content: this.product[0].nftAsset.name,
+          content: this.product.name,
         },
         {
           hid: 'twitter:description',
           name: 'twitter:description',
-          content: this.product[0].nftAsset.description,
+          content: this.product.description,
         },
         {
           hid: 'twitter:image',
           name: 'twitter:image',
-          content: this.productImage,
+          content: this.product.image,
         },
         {
           hid: 'twitter:image:alt',
           name: 'twitter:image:alt',
-          content: this.productImage,
+          content: this.product.image,
         },
         {
           hid: 'og:title',
           property: 'og:title',
-          content: this.product[0].nftAsset.name,
+          content: this.product.name,
         },
         {
           hid: 'og:description',
           property: 'og:description',
-          content: this.product[0].nftAsset.description,
+          content: this.product.description,
         },
         {
           hid: 'og:image',
           property: 'og:image',
-          content: this.productImage,
+          content: this.product.image,
         },
         {
           hid: 'og:image:secure_url',
           property: 'og:image:secure_url',
-          content: this.productImage,
+          content: this.product.image,
         },
         {
           hid: 'og:image:alt',
           property: 'og:image:alt',
-          content: this.product[0].nftAsset.name,
+          content: this.product.name,
         },
       ],
     }
   },
-  computed: {
-    productImage() {
-      return [process.env.ipfsGateway, this.product[0].nftAsset.image].join('')
-    },
-  },
+})
+export default class ProductDetailsComponent extends Vue {
+  product: any = {}
 }
 </script>

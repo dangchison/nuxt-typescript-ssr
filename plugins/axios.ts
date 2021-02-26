@@ -1,31 +1,38 @@
-/**
- * Introduction file
- * Auth: kenshin
- * Date: 2/18/21
- */
+import { Plugin } from '@nuxt/types'
 import { get } from 'lodash'
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { NuxtAxiosInstance } from '@nuxtjs/axios'
+import { remove } from '~/shared/utils/cookie'
 
-interface InterceptorInput {
-  $axios: NuxtAxiosInstance
-  $toast: any
+const HandlingError = (err: AxiosError, $toast: any, redirect: any) => {
+  if (get(err, 'response')) {
+    const errorCode: number = get(err, 'response.status')
+
+    if (errorCode === 401) {
+      $toast.error(get(err, 'response.message', 'access token has expired'))
+      remove(process.env.tokenName)
+      redirect({ name: 'login' })
+    }
+
+    if (![404, 422].includes(get(err, 'response.status'))) {
+      $toast.error(get(err, 'response.message', 'Internal service error'))
+    }
+  }
+
+  return get(err, 'response.data')
 }
 
-const HandlingError = (err: AxiosError, $toast: any) => {
-  if (get(err, 'response')) {
-    if (get(err, 'response.status') === 422) {
-      return get(err, 'response.data')
-    } else {
-      $toast.error(get(err, 'message'), get(err, 'response.data.path') + ' ' + get(err, 'response.data.error'))
+const handleParams = (params: any) => {
+  for (const key in params) {
+    if (typeof params[key] === 'string' && !params[key].trim()) {
+      delete params[key]
     }
   }
 }
 
-export default function ({ $axios, $toast }: InterceptorInput) {
-  $axios.onRequest((config: AxiosRequestConfig) => {
-    console.log('Making request to ' + config.url)
-    $axios.setToken('123', 'Bearer')
+const myAxios: Plugin = ({ $axios, $toast, redirect }) => {
+  $axios.onRequest(({ params, data }: AxiosRequestConfig) => {
+    handleParams(params)
+    handleParams(data)
   })
 
   $axios.onRequestError((error: AxiosError) => {
@@ -37,6 +44,8 @@ export default function ({ $axios, $toast }: InterceptorInput) {
   })
 
   $axios.onResponseError((err: AxiosError) => {
-    return Promise.reject(HandlingError(err, $toast))
+    return Promise.reject(HandlingError(err, $toast, redirect))
   })
 }
+
+export default myAxios

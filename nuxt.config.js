@@ -3,25 +3,25 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - teemo-client',
-    title: 'teemo-client',
+    titleTemplate: '%s - app-client',
+    title: 'app-client',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
         hid: 'description',
         name: 'description',
-        content: 'Teemo is the decentraline app that digitalizes assets onto blockchain platform in the easiest way',
+        content: 'App Description',
       },
-      { hid: 'author', name: 'author', content: 'Teemo' },
+      { hid: 'author', name: 'author', content: 'SDC' },
       { itemprop: 'image', content: '/favicon.ico' },
-      { itemprop: 'name', content: 'Teemo | Decentraline app | Official Website | teemo.ai' },
+      { itemprop: 'name', content: 'App Name' },
       {
         itemprop: 'description',
-        content: 'Teemo is the decentraline app that digitalizes assets onto blockchain platform in the easiest way.',
+        content: 'App Description',
       },
       // Facebook
-      { hid: 'og:site_name', name: 'og:site_name', content: 'Teemo - decentraline app' },
+      { hid: 'og:site_name', name: 'og:site_name', content: 'App Site Name' },
       { hid: 'og:type', name: 'og:type', content: 'article' },
       { hid: 'og:image', name: 'og:image', content: '' },
       { hid: 'og:image:secure_url', name: 'og:image:secure_url', content: '' },
@@ -51,22 +51,15 @@ export default {
 
   // Global Environment: https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-env
   env: {
-    domain: 'https://teemo-ai.herokuapp.com/',
-    ipfsGateway: 'https://gateway.pinata.cloud/',
-    tokenUriPrefix: 'https://ipfs.daonomic.com',
-    etherUrl: 'https://ropsten.etherscan.io/tx/',
-    addressSigner: '0x9BB0cc524ab266471DAe56E62005593e1848362d',
-    pinata: {
-      api: '5b28debe2f3b277f4b52',
-      secret: 'a6dbf9b90e0491dc1b8654ce90afad07b6ec5568e6de4e73266c74b13380f009',
-    },
+    tokenName: 'at',
+    domain: '',
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ['~/assets/scss/index.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['~/plugins/axios'],
+  plugins: ['~/plugins/axios', '~/plugins/ipfs'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -92,19 +85,15 @@ export default {
     '@nuxtjs/toast',
   ],
 
+  // Router Config https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-router
+  router: {},
+
   // toast module configuration: https://github.com/nuxt-community/community-modules/tree/master/packages/toast
   toast: {
-    position: 'right-center',
-    register: [
-      // Register custom toasts
-      {
-        name: 'my-error',
-        message: 'Oops...Something went wrong',
-        options: {
-          type: 'error',
-        },
-      },
-    ],
+    duration: 5000,
+    fitToScreen: true,
+    singleton: true,
+    containerClass: 't-toast',
   },
 
   // i18n module configuration: https://i18n.nuxtjs.org/options-reference
@@ -119,6 +108,7 @@ export default {
     },
     lazy: true,
     langDir: 'locales/',
+    no_prefix: true,
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -161,7 +151,8 @@ export default {
 
   // https://nuxtjs.org/docs/2.x/features/loading
   loading: {
-    color: 'blue',
+    color: '#C85F28',
+    failedColor: '#F44336',
     height: '5px',
     continuous: true,
   },
