@@ -59,7 +59,7 @@ export default {
   css: ['~/assets/scss/index.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['~/plugins/axios', '~/plugins/ipfs', '~/plugins/sw-client'],
+  plugins: ['~/plugins/axios', '~/plugins/ipfs'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
