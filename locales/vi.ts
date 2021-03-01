@@ -1,5 +1,6 @@
 export default {
   text: {
+    offline: 'Bạn đang ngoại tuyến',
     refresh: 'Refresh',
     top: 'Top',
     in: 'in',

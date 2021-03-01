@@ -59,7 +59,7 @@ export default {
   css: ['~/assets/scss/index.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['~/plugins/axios', '~/plugins/ipfs'],
+  plugins: ['~/plugins/axios', '~/plugins/ipfs', '~/plugins/sw.client'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -99,8 +99,8 @@ export default {
   // i18n module configuration: https://i18n.nuxtjs.org/options-reference
   i18n: {
     locales: [
-      { code: 'en', iso: 'en-US', file: 'en.ts' },
-      { code: 'vi', iso: 'vi-VN', file: 'vi.ts' },
+      { code: 'en', iso: 'en-US', file: 'en' },
+      { code: 'vi', iso: 'vi-VN', file: 'vi' },
     ],
     defaultLocale: 'en',
     vueI18n: {
@@ -126,7 +126,13 @@ export default {
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
+      name: 'My App',
+      short_name: 'App PWA',
+      start_url: '/',
+      scope: '/',
+      theme_color: '#ffffff',
       lang: 'en',
+      display: 'standalone',
     },
   },
 
@@ -157,6 +163,43 @@ export default {
     continuous: true,
   },
 
+  loadingIndicator: {
+    name: 'circle',
+    color: '#3B8070',
+    background: '#F44336',
+  },
+
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    filenames: {
+      app: ({ isDev }) => (isDev ? '[name].js' : '[id].[contenthash].js'),
+      chunk: ({ isDev }) => (isDev ? '[name].js' : '[id].[contenthash].js'),
+    },
+    extractCSS: true,
+    extend(config, { isClient }) {
+      // Extend only webpack config for client-bundle
+      if (isClient) {
+        config.devtool = 'source-map'
+        config.module.rules.push({
+          test: /\.js$/,
+          loader: 'babel-loader',
+          exclude: /(node_modules)/,
+        })
+      }
+    },
+    optimization: {
+      minimize: true,
+      splitChunks: {
+        chunks: 'all',
+        cacheGroups: {
+          styles: {
+            name: 'styles',
+            test: /\.(css|vue)$/,
+            chunks: 'all',
+            enforce: true,
+          },
+        },
+      },
+    },
+  },
 }

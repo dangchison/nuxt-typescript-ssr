@@ -29,7 +29,7 @@ export default class HomeComponent extends Vue {
   ownerships: OwnershipModel[] = []
 
   mounted(): void {
-    this.fetchOwnerships()
+    // this.fetchOwnerships()
   }
 
   onGotoProductDetail(productId: string) {

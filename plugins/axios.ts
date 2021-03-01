@@ -10,7 +10,7 @@ const HandlingError = (err: AxiosError, $toast: any, redirect: any) => {
     if (errorCode === 401) {
       $toast.error(get(err, 'response.message', 'access token has expired'))
       remove(process.env.tokenName)
-      redirect({ name: 'login' })
+      redirect('/login')
     }
 
     if (![404, 422].includes(get(err, 'response.status'))) {

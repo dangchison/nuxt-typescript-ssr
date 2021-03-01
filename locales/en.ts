@@ -1,5 +1,6 @@
 export default {
   text: {
+    offline: 'You are offline',
     refresh: 'Refresh',
     top: 'Top',
     in: 'in',

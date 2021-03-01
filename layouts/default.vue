@@ -36,6 +36,13 @@
       </v-container>
     </v-main>
 
+    <v-snackbar :timeout="-1" :value="$nuxt.isOffline" left bottom color="primary" rounded="pill">
+      <div class="t-snackbar__offline">
+        <span>{{ $t('text.offline') }}</span>
+        <v-icon>mdi-wifi-off</v-icon>
+      </div>
+    </v-snackbar>
+
     <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
       <v-list>
         <v-list-item @click.native="right = !right">
@@ -46,14 +53,13 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-footer :absolute="!fixed" app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
   </v-app>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+
+let window: any
 
 @Component({
   middleware: ['auth'],
@@ -80,5 +86,28 @@ export default class DefaultLayout extends Vue {
       to: '/inspire',
     },
   ]
+
+  async mounted() {
+    const workbox = await window.$workbox
+    if (workbox) {
+      workbox.addEventListener('installed', (event: any) => {
+        // If we don't do this we'll be displaying the notification after the initial installation, which isn't perferred.
+        if (event.isUpdate) {
+          console.log('event.isUpdate => ', event.isUpdate)
+          // whatever logic you want to use to notify the user that they need to refresh the page.
+        }
+      })
+    }
+  }
 }
 </script>
+
+<style lang="scss">
+.t-snackbar {
+  &__offline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+</style>
